@@ -1,0 +1,36 @@
+Line: #1
+Line in file 1: //
+Line in file 2: // This program will be used as a command line tool to compare two files passed as arguments,
+
+Line: #2
+Line in file 1: //  compareFiles.c
+Line in file 2: // printing the lines where they differ.
+
+Line: #3
+Line in file 1: //  CompareFiles
+Line in file 2: //
+
+Line: #4
+Line in file 1: //
+Line in file 2: //  main.c
+
+Line: #5
+Line in file 1: //  Created by Jesse Nelson on 3/7/13.
+Line in file 2: //  CompareFiles
+
+Line: #6
+Line in file 1: //  Copyright (c) 2013 Jesse Nelson. All rights reserved.
+Line in file 2: //
+
+Line: #7
+Line in file 1: //
+Line in file 2: //  Created by Jesse Nelson on 2/3/13.
+
+Line: #8
+Line in file 1: 
+Line in file 2: //  Copyright (c) 2013 Jesse Nelson. All rights reserved.
+
+Line: #9
+Line in file 1: #include <stdio.h>
+Line in file 2: //
+
