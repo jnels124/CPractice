@@ -1,30 +1,47 @@
-// This program will be used as a command line tool to compare two files passed as arguments,
-// printing the lines where they differ.
+//
+// This program will be used as the driver for
+//   a command line tool that compares two files
+//   passed as arguments, printing the lines where they differ.
+//
+// Additional features will be added to manipulate the files,
+//   beyond dispaying differences, at a later date.
+//
 //
 //  main.c
 //  CompareFiles
 //
+//  Execution:
+//    From command line, while in project directory, type:
+//    make
+//    make run ( make must be installed on your machine! )
+//    make clean ( removes output files ) 
+//    or
+//    gcc main.c compareFiles.c then,
+//    ./a.out file1, file2
+//
 //  Created by Jesse Nelson on 2/3/13.
 //  Copyright (c) 2013 Jesse Nelson. All rights reserved.
+//
+//  Hosted at https://github.com/jnels124/CPractice
 //
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-#define MAX_CHARS_PER_LINE  1000            // Max number of characters for a line being read
-#define MAX_DIFFERENCES_TO_TRACK  5000
 
-void compareFiles ( FILE *file1, FILE *file2 );
+void compareFiles ( FILE *file1,
+                    FILE *file2
+                  );
 
 int main ( int argc,
-           const char * argv[]
+           const char * argv [ ]
          ) {
     
     FILE *file1,
          *file2;
     
-    // There has to be three arguments. program name, first file, second file
+    // There has to be three arguments.
+    // program name, first file, second file
     if ( argc != 3 ) {
         fprintf ( stderr,
                   "compare: Two files are "
@@ -67,72 +84,4 @@ int main ( int argc,
             exit ( 0 );
         }
     }
-}
-
-void compareFiles ( FILE *file1,
-                    FILE *file2
-                  ) {
-    
-    FILE *outFile = fopen ( "differencesOutput", "w" );
-    
-    int  lineCTR = 1,
-         differencesCTR = 0;
-    
-    char *differences [MAX_DIFFERENCES_TO_TRACK];           // Array of character pointers
-    
-    
-    char line1[MAX_CHARS_PER_LINE],
-         line2[MAX_CHARS_PER_LINE];
-    
-    char *line1Pointer,
-         *line2Pointer;
-    
-    do {
-        line1Pointer = fgets ( line1,
-                               MAX_CHARS_PER_LINE,
-                               file1
-                             );
-        
-        line2Pointer = fgets ( line2,
-                               MAX_CHARS_PER_LINE,
-                               file2
-                             );
-        
-        if ( line1Pointer == line1 && line2Pointer == line2 ) {
-            
-            if ( strcmp ( line1, line2 ) != 0 ) {
-                differences[differencesCTR] =
-                malloc ( MAX_CHARS_PER_LINE );                 // Allocate space on the heap
-                
-                sprintf ( differences[differencesCTR],
-                          "Line: #%d\nLine in file 1: %s"
-                          "Line in file 2: %s\n",
-                          lineCTR,
-                          line1,
-                          line2
-                        );
-                
-                printf ( "%s\n", differences[differencesCTR] ); // Display difference to stdout
-		        fputs ( differences[differencesCTR], outFile ); // Write difference to file
-                
-                differencesCTR++;
-            }
-            
-            else if ( line1Pointer != line1 && line2Pointer == line2 ) {
-                printf ( "end of first file at line:\n%s\n",
-                         line2
-                       );
-            }
-            
-            else if ( line1Pointer == line1 && line2Pointer != line2 ) {
-                printf ( "end of second file at line:\n%s\n",
-                         line1
-                       );
-            }
-        }
-        
-        lineCTR++;
-        
-    } while ( line1Pointer == line1 && line2Pointer == line2 );
-    
 }
