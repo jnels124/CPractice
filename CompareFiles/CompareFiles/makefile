@@ -6,7 +6,7 @@ run: build
 build: a.out
 
 a.out: main.c
-	gcc main.c
+	gcc main.c compareFiles.c
 
 clean:
-	rm a.out
+	rm a.out differencesOutput
