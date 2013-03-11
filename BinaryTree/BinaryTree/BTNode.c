@@ -19,7 +19,8 @@
 #include <string.h>
 #include "CardNodes.h"
 
-struct cardNode **searchResuts;
+struct card *searchResults[sizeof (struct card)];
+
 /* Checks the option to determine how 
  * cards should be inserted and calls
  * the appropriate insertion method
@@ -70,9 +71,9 @@ struct cardNode *createNewCardNode ( struct cardNode *parent,
 
 // Print all nodes in tree
 void printCollection ( struct cardNode *root ) {
- 
     if ( root != NULL ) {
         printCollection ( root->leftChild );
+        
         printf ( "\nType: %s"   // New line already added by fputs
                  "Series number: %d\n"
                  "Year: %d\n"
@@ -86,6 +87,7 @@ void printCollection ( struct cardNode *root ) {
                  root->item->player,
                  root->item->value
                );
+        
         printCollection ( root->rightChild );
     }
 }
@@ -169,8 +171,44 @@ struct cardNode *insertByPlayer ( struct cardNode *parent,
     return parent; // Return updated parent with all pointers
 }
 
-struct cardNode **searchByPlayer ( struct cardNode *root, char *player ) {
-    if (0==0) {
+/* This method will search the binary tree for the specified
+ *   player and returns a pointer to an array of card structures
+ *   that contains a pointer to every card matching the criteria
+ */
+struct card **searchByPlayer ( struct cardNode *root,
+                               char *player
+                             ) {
+    static int foundCTR = 0;
+    printf ( "found counter %d", foundCTR );
+    int strcmpCND;
+     // This will be intialized only once 
+    if ( root == NULL && foundCTR == 0) {
+        return NULL;
     }
-    return searchResuts;
+    
+    if ( root == NULL ) {
+        return searchResults;
+    }
+
+    else if ( ( strcmpCND = strcmp ( root->item->player, player ) ) == 0 ) {
+        searchResults[foundCTR] =
+        ( struct card * ) malloc ( sizeof ( struct card ) );
+        
+        searchResults[foundCTR] = root->item;
+        
+        foundCTR++;
+        
+        searchByPlayer ( root->rightChild, player );
+        searchByPlayer ( root->leftChild, player );
+    }
+    
+    else if ( strcmpCND < 0 ) {
+        searchByPlayer( root->leftChild, player );
+    }
+    
+    else {
+        searchByPlayer (root->rightChild, player );
+    }
+    
+    return searchResults; 
 }

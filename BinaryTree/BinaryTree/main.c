@@ -36,7 +36,7 @@
 
 
 int main( int argc,
-          char * argv[ ] ) {
+          char * argv[ ] ){
 
     struct cardNode *root = NULL;
     struct card *tmpCard = NULL;
@@ -61,8 +61,34 @@ int main( int argc,
     } // end while
     
     printCollection( root );
-    
-} // end main
+} // end of main 
+/*********************************TEST************************************
+    struct card **searchResults = searchByPlayer ( root, "dan marino\n" );
+    int loopCTR = 0;
+    if ( searchResults == NULL ) {
+        printf ( "RESULTS ARE NULL " );
+    }
+    struct card *tmp;// = searchResults[0]->player;
+   
+    printf ( "\n\n\nPrinting search results " );
+    while ( (tmp = searchResults[loopCTR++]) != NULL ) {
+        printf ( "\nType: %s"   // New line already added by fputs
+                 "Series number: %d\n"
+                 "Year: %d\n"
+                 "Brand: %s"   // New line already added by fputs
+                 "Player: %s"  // New line already added by fputs
+                 "Value: $%f\n",
+                 root->item->type,
+                 root->item->cardSeriesNum,
+                 root->item->year,
+                 root->item->brand,
+                 root->item->player,
+                 root->item->value
+               );
+    }
+} // end of main 
+************************************************************************/
+
 /***IGNORE THIS SECTION OF CODE IT IS THE START OF ANOTHER VERSION***
  *  fputs ( "Type in the year of card and hit enter.\n", stdout);
  *   scanf ( "%d", &seriesNumber );
@@ -204,6 +230,3 @@ double getValue ( ) {
 void clearBuffer (void) {
     while ( getchar() != '\n' );
 }
-
-
-

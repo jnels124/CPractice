@@ -34,6 +34,9 @@ int checkDuplicate ( struct cardNode *this,
 struct cardNode *insertByPlayer ( struct cardNode *parent,
                                   struct card *item
                                 );
+struct card **searchByPlayer ( struct cardNode *root,
+                               char *player
+                             );
 
 void printCollection ( struct cardNode * );
 
