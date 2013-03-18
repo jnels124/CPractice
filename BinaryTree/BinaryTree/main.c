@@ -36,7 +36,6 @@
 #include "CardNodes.h"
 #define MAX_CHARS_PER_LINE 300
 
-static FILE *outFile;
 void printCard ( struct card * );
 char *getTypeFromFile ( FILE * );
 char *getPlayerFromFile ( FILE * );
@@ -44,32 +43,19 @@ char *getBrandFromFile ( FILE * );
 int getYearFromFile ( FILE * );
 int getSeriesNumberFromFile ( FILE * );
 double getValueFromFile ( FILE * );
+
 int main( int argc,
           char * argv[ ] ){
+    FILE *outFile = NULL;
 
     struct cardNode *root = NULL;
-    //( struct cardNode * ) malloc ( sizeof ( struct cardNode ) );
     struct card *tmpCard = NULL;
-    int optionChar, fFlag = 0;
+    
+    int optionChar, fFlag = 0, addedToCTR = 0;
 
 
-/***IGNORE THIS SECTION OF CODE IT IS THE START OF ANOTHER VERSION***
- *  fputs ( "Type in the year of card and hit enter.\n", stdout);
- *   scanf ( "%d", &seriesNumber );
- *  "Type: %s "
- *   "Series number: %d "
- *   "Year: %d "
- *   "Brand: %s "
- *   "Player: %s "
- *   "Value: $%f\n"
- *
- *  
- *
- *  int optionChar;
- *
- *
- *   * I am currently only accepting option but getopt is
- *   *   used because feature implementations will process
+    /* I am currently only accepting option but getopt is
+     *   used because feature implementations will process
      *   multiple options
      *
      * Currently passing multiple options at run time
@@ -120,13 +106,14 @@ int main( int argc,
         root = createNewCardNode( root, tmpCard, 'p' );
         
         clearBuffer ( );
-        
+        addedToCTR++;
     } // end while*/
     if (root == NULL ) {
-        printf ("root is fucking null");
+        //handle later!
     }
+    if ( addedToCTR > 0 )
+        outFile = saveData ( root, fopen ( "/Users/jessenelson/Documents/CodeReading/CPractice/BinaryTree/BinaryTree/CardCollection.txt" , "w" ) );
     printCollection(root);
-    outFile = saveData ( root, fopen ( "/Users/jessenelson/Documents/CodeReading/CPractice/BinaryTree/BinaryTree/CardCollection.txt" , "a+" ) );
     fclose ( outFile );
     exit ( 0 );
 }
@@ -329,111 +316,22 @@ struct cardNode *createTree (FILE *inputFile,
     if ( inputFile == NULL ) {
         printf ( "\n\n\n The input file is null");
     }
-    printf ("inside create tree ");
-    char lineInput[MAX_CHARS_PER_LINE];
-    char *linePointer;
     struct card *currentCard;
     
     int i = 0;
     
     
-    while (i < 2 ) {//!( feof ( inputFile ) ) ) {
+    while ( i < 2 ) { //!( feof ( inputFile ) ) ) {
         currentCard = createNewCardFromFile( inputFile );
         root = createNewCardNode(root, currentCard, 'P' );
-        /*printf ( "\ntype after card %s\n", currentCard->type );
-        printf ( "\nbrand after card %s\n", currentCard->brand );
-        printf ( "\nplayer after card %s\n", currentCard->player );
-        printf ( "\nyear after card %d\n", currentCard->year );
-        printf ( "\nvalue after card %f\n", currentCard->value );
-        printf ( "\nseries number after card %d\n", currentCard->cardSeriesNum );*/
         i++;
-        //root = createNewCardNode( root, currentCard, 'p' );
-        /*char type[MAX_CHARS_PER_LINE],
-        player[MAX_CHARS_PER_LINE],
-        brand[MAX_CHARS_PER_LINE];
-        currentCard = ( struct card * ) malloc ( sizeof ( struct card ) );
-        /*linePointer = fgets ( lineInput,
-                              MAX_CHARS_PER_LINE,
-                              inputFile
-                            );*/ // retuns null if error occured or at end
-        //copy = strdup ( linePointer );
-        //printf ("\n\nLine input %s", copy );
-        
-        /*if ( linePointer == NULL ) {
-            break;
-        }*/
-        
-        //strtok ( linePointer, " " ); //Parse to next meaningful value
-        /*printf ( "MADE IT BEFORE ");
-        currentCard->type =fgets ( type,
-                                    MAX_CHARS_PER_LINE,
-                                    inputFile
-                                  );//strtok ( copy, "," );
-        printf ( "MADE IT AFTER ");
-        //printf ("\n The type is %s", currentCard->type);
-        //printf ( "%s", currentCard->type );
-        //lineInput = NULL;
-        
-        /*linePointer = fgets ( lineInput,
-                             MAX_CHARS_PER_LINE,
-                             inputFile
-                             );*/ // retuns null if error occured or at end
-        
-        /*currentCard->cardSeriesNum = atoi ( fgets ( lineInput,
-                                                   MAX_CHARS_PER_LINE,
-                                                   inputFile
-                                                  )
-                                          );//)strtok ( NULL, "," ) );
-        printf ( "%d\n", currentCard->cardSeriesNum );
-        
-        /*linePointer = fgets ( lineInput,
-                             MAX_CHARS_PER_LINE,
-                             inputFile
-                             );*/ // retuns null if error occured or at end
-        
-        /*currentCard->year = atoi ( fgets ( lineInput,
-                                          MAX_CHARS_PER_LINE,
-                                          inputFile
-                                         )// strtok ( NULL, "," )
-                                 );
-        printf ( "%d\n", currentCard->year );
-        printf ( "the value of type 1 is %s  ", currentCard->type );
-        
-        /*linePointer = fgets ( lineInput,
-                             MAX_CHARS_PER_LINE,
-                             inputFile
-                             ); // retuns null if error occured or at end*/
-       /* currentCard->brand = fgets ( brand,
-                                    MAX_CHARS_PER_LINE,
-                                    inputFile
-                                    ); // retuns null if error occured or at end//linePointer;// strtok ( NULL, "," );
-        printf ( "%s", currentCard->brand );
-        printf ( "the value of type 2 is %s  ", currentCard->type );
-        
-        currentCard->player = fgets ( player,
-                                      MAX_CHARS_PER_LINE,
-                                      inputFile
-                                    ); // retuns null if error occured or at end
-        printf ( "%s", currentCard->player );
-        printf ( "the value of type 3 is %s  ", currentCard->type );
-        
-        currentCard->value = atof ( fgets ( lineInput,
-                                           MAX_CHARS_PER_LINE,
-                                           inputFile
-                                          )
-                                  );
-        printf ( "%f\n", currentCard->value );
-        i++;
-        printf ( "the value of type 4 is %s  ", currentCard->type );
-        root = createNewCardNode( root, currentCard, 'p' );
-        printf ( "the value of type after root is %s  ", currentCard->type );*/
-        
-        //printCard ( currentCard );
+       
     } 
         
     return root;
 }
 
+// For debugging
 void printCard ( struct card *current ) {
     printf ( "PC B: %s\n", current->brand );
     printf ( "PC T: %s\n", current->type );

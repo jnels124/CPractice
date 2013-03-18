@@ -5,20 +5,14 @@ topps
 dan marino
 89.000000
 football
-2
-2011
-pinnacle
-aaron rodgers
-34.000000
+45
+2012
+chrome
+cam newton
+90.000000
 football
 1
-2011
+2013
 topps
-dan marino
-89.000000
-football
-2
-2011
-pinnacle
-aaron rodgers
-34.000000
+aaron rodgers 
+78.000000
