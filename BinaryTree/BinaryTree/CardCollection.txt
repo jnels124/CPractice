@@ -10,9 +10,9 @@ football
 chrome
 cam newton
 90.000000
-football
+footbll
 1
-2013
-topps
-aaron rodgers 
-78.000000
+2012
+pinnacle
+Aaron Rodgers
+90.000000

@@ -58,6 +58,13 @@ int getYear ( );
 double getValue ( );
 void clearBuffer ( void );
 struct card *createNewCard ( );
+double getValueFromFile ( FILE * );
+int getYearFromFile ( FILE * );
+int getSeriesNumberFromFile ( FILE * );
+char *getTypeFromFile ( FILE * );
+char *getPlayerFromFile ( FILE * );
+char *getBrandFromFile ( FILE * );
+void startSearch ( );
 void usage ( );
 
 #endif

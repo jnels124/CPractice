@@ -37,13 +37,6 @@
 #define MAX_CHARS_PER_LINE 300
 
 void printCard ( struct card * );
-char *getTypeFromFile ( FILE * );
-char *getPlayerFromFile ( FILE * );
-char *getBrandFromFile ( FILE * );
-int getYearFromFile ( FILE * );
-int getSeriesNumberFromFile ( FILE * );
-double getValueFromFile ( FILE * );
-
 int main( int argc,
           char * argv[ ] ){
     FILE *outFile = NULL;
@@ -53,6 +46,7 @@ int main( int argc,
     
     int optionChar, fFlag = 0, addedToCTR = 0;
 
+    printf ( "\n\nArgv is %s\n\n", strcat ( argv[3], "\n" ) );
 
     /* I am currently only accepting option but getopt is
      *   used because feature implementations will process
@@ -70,18 +64,19 @@ int main( int argc,
         switch ( optionChar ) {
             case 'f':  // Create tree from file
                 fFlag = 1;
-                printf ( "The file name is %s", argv[2]);
-                root = createTree ( fopen ( "/Users/jessenelson/Documents/CodeReading/CPractice/BinaryTree/BinaryTree/CardCollection.txt", "r" ),
+                printf ( "The file name is %s", argv[2] );
+                root = createTree ( fopen ( argv[2] 
+                                            ,"r"
+                                          ),
                                     root
                                   );
-                //printf ( "root type: %s", root->item->type );
-                
                 break;
             
             case 's': 
-                if ( fFlag ) {
-                    printSearch ( searchByPlayer( root, argv[3] ) );
-                }
+                //if ( fFlag ) {
+                startSearch ( );
+                //}
+                printf ( "\n\nHere in s " );
                 break;
                 
             case '?': default: // invalid option
@@ -96,29 +91,73 @@ int main( int argc,
         fflush ( stdout );
         fgets ( input, 100, stdin );
         
-        if ( strcmp ( "yes\n", input ) != 0 ) {
-            
-            break; // exit infinite loop
-            
-        }
+        
         
         tmpCard = createNewCard( tmpCard );
         root = createNewCardNode( root, tmpCard, 'p' );
         
-        clearBuffer ( );
+        clearBuffer ( );    // clear stdin
         addedToCTR++;
-    } // end while*/
+    } // end while
+    
     if (root == NULL ) {
         //handle later!
     }
+    
     if ( addedToCTR > 0 )
-        outFile = saveData ( root, fopen ( "/Users/jessenelson/Documents/CodeReading/CPractice/BinaryTree/BinaryTree/CardCollection.txt" , "w" ) );
+        outFile = saveData ( root, fopen ( "/Users/jessenelson/Documents"
+                                           "/CodeReading/CPractice/BinaryT"
+                                           "ree/BinaryTree/CardCollection.txt"
+                                           , "w"
+                                         )
+                           );
     printCollection(root);
     fclose ( outFile );
     exit ( 0 );
 }
 
-/* Creates a new card by gathrering necessary input from the user
+void startSearch ( ) {
+    char *input = ( char * ) malloc ( 1000 );
+
+    while (1 == 1 ) {
+        fputs ( "Would you like to search for a card?", stdout );
+        fflush ( stdout );
+        fgets ( input, 100, stdin );
+        
+        if ( strcmp ( "yes\n", input ) != 0 ) {
+            break; // exit infinite loop
+        }
+        
+        fputs ( "What player would you like to find?", stdout );
+        fflush ( stdout );
+        fgets ( input, 100, stdin );
+        
+        struct card **searchResults = searchByPlayer ( root, input );
+        struct card *tmp = searchResults[0];
+        
+        printf ( "\n\n\nPrinting search results " );
+        int loopCTR = 0;
+        while ( (tmp = searchResults[loopCTR++]) != NULL ) {
+            printf ( "\nType: %s"   // New line already added by fputs
+                    "Series number: %d\n"
+                    "Year: %d\n"
+                    "Brand: %s"   // New line already added by fputs
+                    "Player: %s"  // New line already added by fputs
+                    "Value: $%f\n",
+                    root->item->type,
+                    root->item->cardSeriesNum,
+                    root->item->year,
+                    root->item->brand,
+                    root->item->player,
+                    root->item->value );
+        }
+    }
+}
+
+/* Creates a new card by calling methods to gather
+ *  the necessary input from the user.
+ *
+ * @return a new card 
  */
 struct card *createNewCard (  ) {
     struct card *newCard = ( struct card * ) malloc ( sizeof ( struct card ) );
@@ -133,7 +172,12 @@ struct card *createNewCard (  ) {
     return newCard;
 }
 
-/* Creates a new card by gathrering necessary input from the user
+/* Creates a new card by calling the appropriate methods to read 
+ * data input from file
+ *
+ * @param inputFile - file to be read
+ *
+ * @return a new card
  */
 struct card *createNewCardFromFile ( FILE *inputFile ) {
     struct card *newCard = ( struct card * ) malloc ( sizeof ( struct card ) );
@@ -148,6 +192,10 @@ struct card *createNewCardFromFile ( FILE *inputFile ) {
     return newCard;
 }
 
+/* Get type from the file
+ *
+ * @return type
+ */
 char *getTypeFromFile ( FILE *inputFile ) {
     char *type = ( char * ) malloc ( MAX_CHARS_PER_LINE );
     fgets ( type, 100, inputFile );
@@ -156,15 +204,22 @@ char *getTypeFromFile ( FILE *inputFile ) {
     return type;
 }
 
+/* Get player from the file
+ *
+ * @return player
+ */
 char *getPlayerFromFile ( FILE *inputFile ) {
     char *player = ( char * ) malloc ( MAX_CHARS_PER_LINE );
     fgets ( player, 100, inputFile );
-    
     printf ( "\nplayer in get value %s", player );
 
     return player;
 }
 
+/* Get brand from file
+ *
+ * @return brand 
+ */
 char *getBrandFromFile ( FILE *inputFile ) {
     char *brand = ( char * ) malloc ( MAX_CHARS_PER_LINE );
     fgets ( brand, 100, inputFile );
@@ -174,9 +229,9 @@ char *getBrandFromFile ( FILE *inputFile ) {
     return brand;
 }
 
-/* Gets card year from user
+/* Gets card year from file
  *
- * @return the input entered by the user
+ * @return year from the file
  */
 int getYearFromFile ( FILE *inputFile ) {
     int year = 0;
@@ -187,14 +242,13 @@ int getYearFromFile ( FILE *inputFile ) {
                          )// strtok ( NULL, "," )
                  );
     printf ( "\nyear in get value %d", year );
-
     
     return year;
 }
 
-/* Gets card type from user
+/* Gets card type from file
  *
- * @return the input entered by the user
+ * @return series number from the file
  */
 int getSeriesNumberFromFile ( FILE *inputFile ) {
     int seriesNum = 0;
@@ -205,23 +259,22 @@ int getSeriesNumberFromFile ( FILE *inputFile ) {
                          )// strtok ( NULL, "," )
                  );
     printf ( "\nseries in get value %d", seriesNum );
-
     
     return seriesNum;
 }
 
-/* Gets card value from user
+/* Gets card value from file
  *
- * @return the input entered by the user
+ * @return value from file
  */
 double getValueFromFile ( FILE *inputFile ) {
     double value = 0.0;
     char valueInput[15];
     value = atoi ( fgets ( valueInput,
-                              MAX_CHARS_PER_LINE,
-                              inputFile
-                              )// strtok ( NULL, "," )
-                      );
+                           MAX_CHARS_PER_LINE,
+                           inputFile
+                         )// strtok ( NULL, "," )
+                 );
     printf ( "\nValue in get value %f", value );
     
     return value;
@@ -305,33 +358,40 @@ double getValue ( ) {
 
 
 /* This method is used to clear the input 
- *   buffer after each card is entered
+ *   buffer after each card is entered 
+ *   when input is from the console
  */
 void clearBuffer (void) {
     while ( getchar() != '\n' );
 }
 
+/* Create a binary tree by reading the provided file
+ *
+ * @param inputFile - File to be read
+ * @param root - root of binary tree
+ * @return new root to the binary tree
+ */
 struct cardNode *createTree (FILE *inputFile,
-                             struct cardNode *root ) {
+                             struct cardNode *root
+                            ) {
     if ( inputFile == NULL ) {
-        printf ( "\n\n\n The input file is null");
+        printf ( "\n\n\n The input file is null");  // Used for debugging
     }
+    
     struct card *currentCard;
+    int EOFFlag = 0;
     
-    int i = 0;
-    
-    
-    while ( i < 2 ) { //!( feof ( inputFile ) ) ) {
+    while ( (EOFFlag = getc ( inputFile ) ) != EOF ) { //!( feof ( inputFile ) ) ) {
+        ungetc ( EOFFlag , inputFile ); // Put char back on if it is not end of file
         currentCard = createNewCardFromFile( inputFile );
         root = createNewCardNode(root, currentCard, 'P' );
-        i++;
-       
     } 
         
     return root;
 }
 
-// For debugging
+// Prints the card passed as parameter
+// Used for debugging!
 void printCard ( struct card *current ) {
     printf ( "PC B: %s\n", current->brand );
     printf ( "PC T: %s\n", current->type );
@@ -341,13 +401,16 @@ void printCard ( struct card *current ) {
     printf ( "PC V: %f\n", current->value );
 }
 
-// TODO:
-//    Write file error checks
-//    Implement a true serialize method
+/* This method will store data of a tree to file
+ *  to be read in later.
+ *
+ * TODO:
+ * Write file error checks and handle them
+ *  Implement a true serialize method
+ *
+ * @return refererence to the created file (will be used in later implementation )
+ */
 FILE *saveData ( struct cardNode *root, FILE *outFile ) {
-    printf ("Save was called");
-    //
-    printf ("Was able to open the file");
     if ( root != NULL ) {
         saveData ( root->leftChild, outFile );
         
@@ -377,7 +440,11 @@ FILE *saveData ( struct cardNode *root, FILE *outFile ) {
     return NULL;
 }
 
+/* This method will print the cards matching the search 
+ * criteria
+ */
 void printSearch ( struct card **found ) {
+    printf ( "\nprint in print search " );
     int loopCTR = 0;
     struct card *tmp;
     while ( ( tmp = found[loopCTR++] ) != NULL ) {
@@ -393,9 +460,11 @@ void printSearch ( struct card **found ) {
                  tmp->brand,
                  tmp->player,
                  tmp->value
-               );
+              );
     }
 }
 
+/* This will display usage information to the user 
+ */
 void usage ( ) {
 }
