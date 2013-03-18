@@ -118,6 +118,8 @@ int checkDuplicate ( struct cardNode *this,
            brandCMP == 0;
 }
 
+//*******************************BY_PLAYER**********************************
+
 /* Inserts card in binary true in order by player
  *
  * @return pointer to parent
@@ -154,9 +156,7 @@ struct cardNode *insertByPlayer ( struct cardNode *parent,
         tmp->item = item;
         tmp->count = 1;
         tmp->leftChild = parent->leftChild;
-        tmp->rightChild = parent->rightChild;
-        
-        parent->rightChild = NULL;
+
         parent->leftChild = tmp;
     }
     
@@ -178,18 +178,28 @@ struct cardNode *insertByPlayer ( struct cardNode *parent,
 struct card **searchByPlayer ( struct cardNode *root,
                                char *player
                              ) {
-    static int foundCTR = 0;
-    printf ( "found counter %d", foundCTR );
+    static int foundCTR = 0; // Initialized only once on first call
+
     int strcmpCND;
-     // This will be intialized only once 
+    
     if ( root == NULL && foundCTR == 0) {
         return NULL;
     }
     
     if ( root == NULL ) {
-        return searchResults;
+        
+        //return searchResults;
     }
-
+    /* Performance in this block can be improved by
+     * calling another method to finish checking the
+     * tree until we no longer have cards of the same
+     * player. This block only adds the card to the 
+     * array. The program will continue checking the 
+     * tree even after the first non-player is found
+     * This can drastically effect execution time if 
+     * you have a BIG struture and the player
+     * being searched for is at the top of the tree.
+     */
     else if ( ( strcmpCND = strcmp ( root->item->player, player ) ) == 0 ) {
         searchResults[foundCTR] =
         ( struct card * ) malloc ( sizeof ( struct card ) );
@@ -212,3 +222,112 @@ struct card **searchByPlayer ( struct cardNode *root,
     
     return searchResults; 
 }
+//****************************END_BY_PLAYER**********************************
+
+//*******************************BY_PLAYER**********************************
+
+/* Inserts card in binary true in order by player
+ *
+ * @return pointer to parent
+ *
+ *
+struct cardNode *insertByPlayer ( struct cardNode *parent,
+                                 struct card *item
+                                 ) {
+    int strcmpCND;
+    
+    // New tree, or inserting at leaf node
+    if ( parent == NULL ) {
+        parent = ( struct cardNode * ) malloc ( sizeof ( struct cardNode ) );
+        parent->item = item;
+        parent->leftChild = NULL;
+        parent->rightChild = NULL;
+    }
+    
+    else if ( checkDuplicate( parent, item ) ) {
+        parent->count++; // duplicate card
+    }
+    
+    /* Found correct location for player.
+     * The new node will be inserted to the left
+     * of the first node encountered that contains
+     * the same player.
+     *
+    else if ( ( strcmpCND = strcmp
+               ( parent->item->player, item->player ) ) == 0 ) {
+        
+        struct cardNode *tmp =
+        ( struct cardNode * ) malloc ( sizeof ( struct cardNode ) );
+        
+        tmp->item = item;
+        tmp->count = 1;
+        tmp->leftChild = parent->leftChild;
+        
+        parent->leftChild = tmp;
+    }
+    
+    else if ( strcmpCND < 0 ) {
+        parent->leftChild = insertByPlayer ( parent->leftChild, item );
+    }
+    
+    else {
+        parent->rightChild = insertByPlayer ( parent->rightChild, item );
+    }
+    
+    return parent; // Return updated parent with all pointers
+}
+
+/* This method will search the binary tree for the specified
+ *   player and returns a pointer to an array of card structures
+ *   that contains a pointer to every card matching the criteria
+ *
+struct card **searchByPlayer ( struct cardNode *root,
+                              char *player
+                              ) {
+    static int foundCTR = 0; // Initialized only once on first call
+    
+    int strcmpCND;
+    
+    if ( root == NULL && foundCTR == 0) {
+        return NULL;
+    }
+    
+    if ( root == NULL ) {
+        
+        //return searchResults;
+    }
+    /* Performance in this block can be improved by
+     * calling another method to finish checking the
+     * tree until we no longer have cards of the same
+     * player. This block only adds the card to the
+     * array. The program will continue checking the
+     * tree even after the first non-player is found
+     * This can drastically effect execution time if
+     * you have a BIG struture and the player
+     * being searched for is at the top of the tree.
+     *
+    else if ( ( strcmpCND = strcmp ( root->item->player, player ) ) == 0 ) {
+        searchResults[foundCTR] =
+        ( struct card * ) malloc ( sizeof ( struct card ) );
+        
+        searchResults[foundCTR] = root->item;
+        
+        foundCTR++;
+        
+        searchByPlayer ( root->rightChild, player );
+        searchByPlayer ( root->leftChild, player );
+    }
+    
+    else if ( strcmpCND < 0 ) {
+        searchByPlayer( root->leftChild, player );
+    }
+    
+    else {
+        searchByPlayer (root->rightChild, player );
+    }
+    
+    return searchResults;
+}*/
+//****************************END_BY_PLAYER**********************************
+
+

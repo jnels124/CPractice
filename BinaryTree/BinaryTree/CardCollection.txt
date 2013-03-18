@@ -1,0 +1,24 @@
+football
+1
+2011
+topps
+dan marino
+89.000000
+football
+2
+2011
+pinnacle
+aaron rodgers
+34.000000
+football
+1
+2011
+topps
+dan marino
+89.000000
+football
+2
+2011
+pinnacle
+aaron rodgers
+34.000000

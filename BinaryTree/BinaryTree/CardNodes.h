@@ -37,6 +37,7 @@ struct cardNode *insertByPlayer ( struct cardNode *parent,
 struct card **searchByPlayer ( struct cardNode *root,
                                char *player
                              );
+void printSearch ( struct card ** );
 
 void printCollection ( struct cardNode * );
 
@@ -44,6 +45,11 @@ struct cardNode *createNewCardNode ( struct cardNode *parent,
                                     struct card *item,
                                     char option
                                     );
+
+struct cardNode *createTree ( FILE *, struct cardNode * );
+FILE *saveData ( struct cardNode *, FILE * );
+
+
 char *getType ( );
 char *getBrand ( );
 char *getPlayer ( );
@@ -52,5 +58,6 @@ int getYear ( );
 double getValue ( );
 void clearBuffer ( void );
 struct card *createNewCard ( );
+void usage ( );
 
 #endif
